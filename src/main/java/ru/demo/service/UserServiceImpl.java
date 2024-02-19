@@ -6,6 +6,7 @@ import ru.demo.exception.NotExistsException;
 import ru.demo.model.User;
 import ru.demo.repository.UserDao;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(Long id) throws SQLException {
         if (id == null)
             throw new IllegalArgumentException(INVALID_ID);
 
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByName(String name) {
+    public Optional<User> findByName(String name) throws SQLException {
         if (!userNameIsValid(name))
             throw new IllegalArgumentException(INVALID_NAME);
 
@@ -41,12 +42,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> getAll() throws SQLException {
         return userDao.getAll();
     }
 
     @Override
-    public Optional<User> create(String name) {
+    public Optional<User> create(String name) throws SQLException {
         if (!userNameIsValid(name))
             throw new IllegalArgumentException(INVALID_NAME);
 
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> update(Long id, String name) {
+    public Optional<User> update(Long id, String name) throws SQLException {
         if (id == null)
             throw new IllegalArgumentException(INVALID_ID);
 
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(String name) {
+    public void delete(String name) throws SQLException {
         if (!userNameIsValid(name))
             throw new IllegalArgumentException(INVALID_NAME);
 
@@ -90,7 +91,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id) throws SQLException {
         if (id == null)
             throw new IllegalArgumentException(INVALID_ID);
 
@@ -98,6 +99,11 @@ public class UserServiceImpl implements UserService {
             throw new NotExistsException(String.format(NOT_EXISTS_BY_ID, id));
 
         userDao.delete(id);
+    }
+
+    @Override
+    public void clear() throws SQLException {
+        userDao.clear();
     }
 
     private static boolean userNameIsValid(String name) {
