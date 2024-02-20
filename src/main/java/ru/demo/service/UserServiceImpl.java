@@ -27,17 +27,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findById(Long id) throws SQLException {
-        if (id == null)
-            throw new IllegalArgumentException(INVALID_ID);
-
+        validateId(id);
         return userDao.findById(id);
     }
 
     @Override
     public Optional<User> findByName(String name) throws SQLException {
-        if (!userNameIsValid(name))
-            throw new IllegalArgumentException(INVALID_NAME);
-
+        validateUserName(name);
         return userDao.findByName(name);
     }
 
@@ -48,8 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> create(String name) throws SQLException {
-        if (!userNameIsValid(name))
-            throw new IllegalArgumentException(INVALID_NAME);
+        validateUserName(name);
 
         if (userDao.findByName(name).isPresent())
             throw new AlreadyExistsException(String.format(EXISTS_BY_NAME, name));
@@ -59,11 +54,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> update(Long id, String name) throws SQLException {
-        if (id == null)
-            throw new IllegalArgumentException(INVALID_ID);
-
-        if (!userNameIsValid(name))
-            throw new IllegalArgumentException(INVALID_NAME);
+        validateId(id);
+        validateUserName(name);
 
         var user = userDao.findById(id);
         if (!user.isPresent())
@@ -80,8 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(String name) throws SQLException {
-        if (!userNameIsValid(name))
-            throw new IllegalArgumentException(INVALID_NAME);
+        validateUserName(name);
 
         var user = userDao.findByName(name);
         if (!user.isPresent())
@@ -92,8 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) throws SQLException {
-        if (id == null)
-            throw new IllegalArgumentException(INVALID_ID);
+        validateId(id);
 
         if (!userDao.findById(id).isPresent())
             throw new NotExistsException(String.format(NOT_EXISTS_BY_ID, id));
@@ -106,7 +96,13 @@ public class UserServiceImpl implements UserService {
         userDao.clear();
     }
 
-    private static boolean userNameIsValid(String name) {
-        return name != null && !"".equals(name.trim());
+    private void validateId(Long id) {
+        if (id == null || id < 1L)
+            throw new IllegalArgumentException(INVALID_ID);
+    }
+
+    private void validateUserName(String name) {
+        if (name == null || "".equals(name.trim()))
+            throw new IllegalArgumentException(INVALID_NAME);
     }
 }

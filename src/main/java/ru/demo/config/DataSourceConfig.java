@@ -15,7 +15,7 @@ public class DataSourceConfig {
         config.setDriverClassName("org.postgresql.Driver");
         config.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
         config.setUsername("postgres");
-        config.setPassword("checkPwd");
+        config.setPassword("postgres");
 
         return new HikariDataSource(config);
     }
