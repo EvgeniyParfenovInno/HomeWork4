@@ -15,6 +15,7 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
 
     private static final String USERNAME_FIELD = "username";
+    private static final String ID_FIELD = "id";
     private DataSource dataSource;
 
     @Autowired
@@ -31,7 +32,7 @@ public class UserDaoImpl implements UserDao {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return Optional.of(new User()
-                        .setId(rs.getLong("id"))
+                        .setId(rs.getLong(ID_FIELD))
                         .setUserName(rs.getString(USERNAME_FIELD))
                 );
             }
@@ -48,7 +49,7 @@ public class UserDaoImpl implements UserDao {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return Optional.of(new User()
-                        .setId(rs.getLong("id"))
+                        .setId(rs.getLong(ID_FIELD))
                         .setUserName(rs.getString(USERNAME_FIELD))
                 );
             }
@@ -65,7 +66,7 @@ public class UserDaoImpl implements UserDao {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 users.add(new User()
-                        .setId(rs.getLong("id"))
+                        .setId(rs.getLong(ID_FIELD))
                         .setUserName(rs.getString(USERNAME_FIELD)));
             }
             return users;

@@ -11,12 +11,7 @@ import javax.sql.DataSource;
 public class DataSourceConfig {
     @Bean
     public DataSource hikariDataSource() {
-        HikariConfig config = new HikariConfig();
-        config.setDriverClassName("org.postgresql.Driver");
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
-        config.setUsername("postgres");
-        config.setPassword("checkPwd");
-
+        HikariConfig config = new HikariConfig("/hikaricp.properties");
         return new HikariDataSource(config);
     }
 }
